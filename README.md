@@ -314,16 +314,16 @@ Stack
     URLSearchParams — partage par URL
 
 Structure du projet
-text
+```text
 
 .
 ├── index.html      # Application complète (HTML + CSS + JS inline)
 ├── README.md       # Ce fichier
 ├── LICENSE         # MIT
 └── .nojekyll       # (optionnel) désactive Jekyll sur GitHub Pages
-
+```
 Pipeline de données
-text
+```text
 
 Données réelles (constantes JS embarquées)
        │
@@ -343,7 +343,7 @@ Données réelles (constantes JS embarquées)
 ┌──────────────────┐
 │ Export           │  → 10 formats disponibles
 └──────────────────┘
-
+```
 Stockage local
 Clé localStorage	Contenu
 dash_theme	Thème actif (light / dark)
@@ -677,12 +677,4 @@ Fait pour la communauté scientifique open source.
 
 ---
 
-<div align="center">
-🇫🇷 Gunout · 2026
 
-https://img.shields.io/badge/Made_in-France-002395?style=flat-square&labelColor=FFFFFF
-https://img.shields.io/badge/GitHub-gunout-181717?style=flat-square&logo=github&logoColor=white
-https://img.shields.io/badge/2026-ED2939?style=flat-square&labelColor=FFFFFF
-
-<sub>© 2026 <strong>gunout</strong> — Tous droits réservés.</sub>
-</div> ```
