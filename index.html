@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🇫🇷 Dashboard Scientifique — Données Réelles</title>
+
+<style>
+/* ============================================================================
+   THÈME BLANC + BLEU BLANC ROUGE 🇫🇷
+   ============================================================================ */
+:root {
+  --bg: #FFFFFF;
+  --bg-soft: #F8FAFF;
+  --bg-elev: #F0F4FF;
+  --card: #FFFFFF;
+  --border: #D8E0F0;
+  --border-strong: #B8C8E0;
+  --text: #0A1428;
+  --text-dim: #4A5878;
+  --text-mute: #8896B8;
+
+  /* Couleurs France */
+  --france-blue: #0055A4;
+  --france-blue-deep: #002395;
+  --france-blue-light: #5B9BD5;
+  --france-red: #EF4135;
+  --france-red-deep: #C1272D;
+  --france-white: #FFFFFF;
+
+  /* Aliases */
+  --accent: var(--france-blue);
+  --accent-2: var(--france-red);
+  --success: #16A34A;
+  --warning: #CA8A04;
+  --danger: var(--france-red);
+  --real: #16A34A;
+  --sim: #CA8A04;
+
+  --shadow-sm: 0 1px 3px rgba(0, 35, 149, 0.06);
+  --shadow: 0 4px 16px rgba(0, 35, 149, 0.08);
+  --shadow-lg: 0 10px 40px rgba(0, 35, 149, 0.15);
+  --glow: 0 0 20px rgba(0, 85, 164, 0.20);
+  --glow-red: 0 0 20px rgba(239, 65, 53, 0.20);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  font-size: clamp(14px, 1.5vw, 16px);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+button, input, select { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; min-height: 40px; }
+:focus-visible { outline: 2px solid var(--france-blue); outline-offset: 2px; border-radius: 4px; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-soft); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--france-blue-light); }
+
+.skip-link {
+  position: absolute; top: -60px; left: 0;
+  background: var(--france-blue); color: var(--france-white);
+  padding: 0.8rem 1.2rem; z-index: 10000;
+  font-weight: 700; border-radius: 0 0 8px 0;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* ============================================================================
+   HEADER — TRICOLORE
+   ============================================================================ */
+.header {
+  background: var(--france-white);
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg,
+    var(--france-blue-deep) 0%, var(--france-blue-deep) 33%,
+    var(--france-white) 33%, var(--france-white) 66%,
+    var(--france-red) 66%, var(--france-red) 100%) 1;
+  padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem; flex-wrap: wrap;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.header-brand { display: flex; align-items: center; gap: 0.8rem; min-width: 0; flex: 1; }
+.header-logo {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--france-blue), var(--france-red));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rotate 30s linear infinite;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+.header-title-block { min-width: 0; }
+.header h1 {
+  font-size: clamp(0.95rem, 2.5vw, 1.4rem);
+  font-weight: 800;
+  background: linear-gradient(90deg,
+    var(--france-blue-deep) 0%,
+    var(--france-blue) 40%,
+    var(--france-red) 60%,
+    var(--france-red) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.header-subtitle {
+  font-size: clamp(0.65rem, 1.3vw, 0.78rem);
+  color: var(--text-dim); margin-top: 0.15rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.header-controls { display: flex; gap: 0.5rem; flex-shrink: 0; }
+.icon-btn {
+  width: 42px; height: 42px; border-radius: 8px;
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  color: var(--text-dim); font-size: 1.1rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.icon-btn:hover {
+  border-color: var(--france-blue);
+  color: var(--france-blue);
+  background: var(--bg-soft);
+  box-shadow: var(--glow);
+}
+
+/* STATUS BAR */
+.status-bar {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem clamp(1rem, 3vw, 2rem);
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem; color: var(--text-dim);
+  flex-wrap: wrap;
+}
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--france-blue);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.source-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 2px 10px; border-radius: 10px;
+  font-size: 0.68rem; font-weight: 700;
+  background: rgba(22, 163, 74, 0.10);
+  border: 1px solid var(--real);
+  color: var(--real);
+  margin-left: auto;
+}
+.source-badge.sim {
+  background: rgba(202, 138, 4, 0.10);
+  border-color: var(--sim);
+  color: var(--sim);
+}
+
+/* LAYOUT */
+.layout {
+  display: grid; grid-template-columns: 300px 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+  max-width: 1800px; margin: 0 auto;
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+.sidebar-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0, 35, 149, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 999; opacity: 0; transition: opacity 0.3s;
+}
+.sidebar-backdrop.show { display: block; opacity: 1; }
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.2rem;
+  height: fit-content; position: sticky; top: 110px;
+  max-height: calc(100vh - 130px); overflow-y: auto;
+  transition: transform 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar-section { margin-bottom: 1.5rem; }
+.sidebar-section:last-child { margin-bottom: 0; }
+.section-title {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--france-blue);
+  margin-bottom: 0.8rem; padding-bottom: 0.5rem;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg,
+    var(--france-blue) 0%, var(--france-blue) 50%,
+    var(--france-red) 50%, var(--france-red) 100%) 1;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.section-title .count {
+  background: var(--bg-soft);
+  color: var(--france-blue);
+  padding: 1px 8px; border-radius: 10px;
+  font-size: 0.68rem;
+}
+
+.planet-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+.planet-btn {
+  padding: 0.7rem 0.5rem;
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 0.8rem; font-weight: 600;
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  transition: all 0.2s; position: relative; overflow: hidden;
+  min-height: 68px;
+}
+.planet-btn .emoji { font-size: 1.4rem; transition: transform 0.3s; }
+.planet-btn:hover {
+  border-color: var(--france-blue);
+  color: var(--france-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.planet-btn:hover .emoji { transform: scale(1.15); }
+.planet-btn.active {
+  background: linear-gradient(135deg, rgba(0, 85, 164, 0.08), rgba(239, 65, 53, 0.08));
+  border-color: var(--france-blue);
+  color: var(--france-blue);
+  box-shadow: 0 0 0 2px rgba(0, 85, 164, 0.15);
+}
+.planet-btn .real-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--real);
+  box-shadow: 0 0 6px rgba(22, 163, 74, 0.6);
+}
+.planet-btn .kbd-hint {
+  position: absolute; top: 4px; left: 6px;
+  font-size: 0.6rem;
+  color: var(--text-mute);
+  background: var(--bg-soft);
+  padding: 1px 4px; border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+select, input[type="range"] {
+  width: 100%; padding: 0.6rem;
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-height: 42px;
+  transition: border-color 0.2s;
+}
+select:focus, input:focus {
+  outline: none;
+  border-color: var(--france-blue);
+  box-shadow: 0 0 0 3px rgba(0, 85, 164, 0.1);
+}
+.field-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.8rem; color: var(--text-dim);
+  margin-bottom: 0.4rem; gap: 0.5rem;
+}
+.field-label .value {
+  color: var(--france-blue); font-weight: 700;
+  font-family: monospace;
+}
+input[type="range"] { padding: 0; min-height: auto; height: 6px; accent-color: var(--france-blue); }
+
+.info-box {
+  background: linear-gradient(135deg, rgba(0, 85, 164, 0.04), rgba(239, 65, 53, 0.04));
+  border: 1px solid rgba(0, 85, 164, 0.15);
+  border-left: 3px solid var(--france-blue);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.info-box strong { color: var(--france-blue); }
+.info-box .src {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  margin-top: 0.4rem; padding: 2px 8px;
+  background: rgba(22, 163, 74, 0.10);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  color: var(--real); font-weight: 700;
+}
+.info-box .src.sim {
+  background: rgba(202, 138, 4, 0.10);
+  color: var(--sim);
+}
+.info-box a {
+  color: var(--france-blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.checkbox-row {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: 0.85rem; color: var(--text-dim);
+  cursor: pointer; padding: 0.4rem 0;
+  min-height: 36px;
+}
+.checkbox-row input {
+  accent-color: var(--france-blue);
+  width: 18px; height: 18px; cursor: pointer;
+  flex-shrink: 0;
+}
+.checkbox-row:hover { color: var(--text); }
+
+/* EXPORT BUTTONS */
+.export-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+.export-btn {
+  padding: 0.65rem 0.4rem;
+  background: var(--france-white);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+.export-btn:hover {
+  border-color: var(--france-blue);
+  color: var(--france-blue);
+  background: var(--bg-soft);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.export-btn.red:hover {
+  border-color: var(--france-red);
+  color: var(--france-red);
+  background: rgba(239, 65, 53, 0.04);
+}
+.export-btn.primary {
+  background: linear-gradient(135deg, var(--france-blue), var(--france-blue-deep));
+  color: var(--france-white);
+  border: none;
+  grid-column: span 2;
+}
+.export-btn.primary:hover {
+  background: linear-gradient(135deg, var(--france-blue-deep), var(--france-blue));
+  box-shadow: var(--glow);
+  color: var(--france-white);
+}
+
+/* MAIN */
+.main { min-width: 0; }
+.breadcrumb {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.82rem; color: var(--text-dim);
+  margin-bottom: 1rem; flex-wrap: wrap;
+}
+.breadcrumb .current { color: var(--france-blue); font-weight: 700; }
+.breadcrumb .sep { opacity: 0.4; }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: clamp(0.6rem, 1.5vw, 1rem);
+  margin-bottom: 1.5rem;
+}
+.metric-card {
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(0.9rem, 2vw, 1rem);
+  position: relative; overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.metric-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--france-blue), var(--france-red));
+}
+.metric-card.real::before {
+  background: linear-gradient(90deg, var(--real), var(--france-blue));
+}
+.metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 85, 164, 0.4);
+  box-shadow: var(--shadow);
+}
+.metric-label {
+  font-size: clamp(0.65rem, 1.3vw, 0.72rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.3rem;
+}
+.metric-label .src-tag {
+  font-size: 0.6rem; padding: 1px 5px; border-radius: 3px;
+  background: rgba(22, 163, 74, 0.10);
+  color: var(--real);
+  font-weight: 700;
+}
+.metric-label .src-tag.sim {
+  background: rgba(202, 138, 4, 0.10);
+  color: var(--sim);
+}
+.metric-value {
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.metric-unit {
+  font-size: 0.72rem;
+  color: var(--text-mute);
+  margin-top: 0.3rem;
+}
+
+/* CHARTS */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: clamp(0.8rem, 2vw, 1rem);
+  margin-bottom: 1.5rem;
+}
+.chart-card {
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(0.9rem, 2vw, 1.2rem);
+  min-width: 0;
+  display: flex; flex-direction: column;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.chart-card:hover {
+  border-color: rgba(0, 85, 164, 0.3);
+  box-shadow: var(--shadow);
+}
+.chart-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1rem; gap: 0.5rem; flex-shrink: 0;
+}
+.chart-card h3 {
+  font-size: clamp(0.8rem, 1.7vw, 0.88rem);
+  color: var(--france-blue);
+  font-weight: 700;
+  display: flex; align-items: center; gap: 0.4rem;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.chart-card h3 .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--real);
+  box-shadow: 0 0 6px rgba(22, 163, 74, 0.5);
+  flex-shrink: 0;
+}
+.chart-card h3 .dot.sim {
+  background: var(--sim);
+  box-shadow: 0 0 6px rgba(202, 138, 4, 0.5);
+}
+.chart-action {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 32px; flex-shrink: 0;
+}
+.chart-action:hover {
+  border-color: var(--france-blue);
+  color: var(--france-blue);
+  background: var(--bg-soft);
+}
+
+.chart-wrap {
+  position: relative;
+  width: 100%; height: 280px;
+  flex: 1 1 auto; min-height: 220px;
+}
+.chart-wrap canvas {
+  display: block;
+  width: 100%; height: 100%;
+}
+.chart-card.fullscreen {
+  position: fixed; inset: 1rem; z-index: 9999;
+  box-shadow: var(--shadow-lg);
+}
+.chart-card.fullscreen .chart-wrap { height: calc(100vh - 120px); }
+
+/* Insights */
+.insights-card {
+  background: var(--france-white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.insights-card h3 {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: var(--france-blue);
+  margin-bottom: 1rem; font-weight: 700;
+}
+.insights-list { display: grid; gap: 0.7rem; }
+.insight-item {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--france-blue);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  font-size: clamp(0.78rem, 1.6vw, 0.85rem);
+  line-height: 1.6;
+}
+.insight-item.real { border-left-color: var(--real); }
+.insight-item.red { border-left-color: var(--france-red); }
+.insight-item strong { color: var(--france-blue); }
+
+.footer {
+  text-align: center;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  color: var(--text-mute);
+  font-size: clamp(0.7rem, 1.4vw, 0.75rem);
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg,
+    var(--france-blue-deep) 0%, var(--france-blue-deep) 33%,
+    var(--france-white) 33%, var(--france-white) 66%,
+    var(--france-red) 66%, var(--france-red) 100%) 1;
+  margin-top: 2rem;
+  padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
+}
+.footer a { color: var(--france-blue); }
+
+.toast-container {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 10000;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  pointer-events: none;
+  max-width: min(400px, calc(100vw - 2rem));
+}
+.toast {
+  padding: 0.8rem 1.2rem;
+  background: var(--france-white);
+  border: 1px solid var(--france-blue);
+  border-left: 4px solid var(--france-blue);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s;
+  pointer-events: auto;
+}
+.toast.success { border-color: var(--success); border-left-color: var(--success); }
+.toast.error { border-color: var(--france-red); border-left-color: var(--france-red); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(400px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: monospace;
+  font-size: 0.7rem;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 var(--border-strong);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) { .layout { grid-template-columns: 260px 1fr; } }
+@media (max-width: 1000px) {
+  .menu-toggle { display: inline-flex !important; }
+  .layout { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
+  .sidebar {
+    position: fixed; top: 0; left: 0;
+    height: 100vh; width: min(320px, 85vw);
+    max-height: 100vh; z-index: 1000;
+    border-radius: 0; border: none;
+    border-right: 1px solid var(--border-strong);
+    transform: translateX(-100%);
+    padding-top: max(1.2rem, env(safe-area-inset-top));
+    padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 30px rgba(0, 35, 149, 0.2);
+  }
+}
+@media (max-width: 768px) {
+  .header { padding: 0.7rem 1rem; }
+  .header-logo { font-size: 1.4rem; }
+  .header h1 { font-size: 0.95rem; }
+  .header-subtitle { display: none; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-value { font-size: 1.2rem; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .chart-wrap { height: 240px; }
+}
+@media (max-width: 640px) {
+  .header { padding: 0.6rem 0.8rem; gap: 0.5rem; }
+  .header-logo { font-size: 1.2rem; }
+  .header h1 { font-size: 0.85rem; }
+  .icon-btn { width: 38px; height: 38px; font-size: 1rem; }
+  .metric-label { font-size: 0.62rem; }
+  .metric-value { font-size: 1.1rem; }
+  .chart-card { padding: 0.8rem; }
+  .chart-wrap { height: 220px; min-height: 180px; }
+  .chart-card h3 { font-size: 0.78rem; }
+  .export-grid { grid-template-columns: 1fr; }
+  .export-btn.primary { grid-column: span 1; }
+  .toast-container {
+    left: 0.75rem; right: 0.75rem;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    max-width: none; align-items: stretch;
+  }
+  .toast { max-width: none; width: 100%; }
+}
+@media (max-width: 480px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .chart-wrap { height: 200px; }
+}
+@media (max-width: 380px) {
+  .icon-btn { width: 34px; height: 34px; font-size: 0.9rem; }
+  .planet-btn .kbd-hint { display: none; }
+  .chart-wrap { height: 180px; }
+}
+@media (min-width: 1900px) {
+  .layout { max-width: 2000px; grid-template-columns: 340px 1fr; }
+  .chart-wrap { height: 320px; }
+}
+@media print {
+  .header-controls, .sidebar, .sidebar-backdrop, .toast-container,
+  .status-bar, .export-grid, .chart-action, .breadcrumb { display: none !important; }
+  .layout { display: block; padding: 0; }
+  body { background: #fff; color: #000; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">🇫🇷</div>
+    <div class="header-title-block">
+      <h1>Dashboard Scientifique Multi-Corps</h1>
+      <p class="header-subtitle">Données réelles — NASA · NOAA · SILSO · JPL · ESA</p>
+    </div>
+  </div>
+  <div class="header-controls">
+    <button class="icon-btn menu-toggle" id="menuToggle" style="display:none" aria-label="Filtres">☰</button>
+    <button class="icon-btn" id="regenBtn" aria-label="Régénérer">🔄</button>
+  </div>
+</header>
+
+<div class="status-bar">
+  <span class="status-dot"></span>
+  <span id="statusText">Chargement…</span>
+  <span id="sourceBadge" class="source-badge">📡 RÉEL</span>
+</div>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="section-title">🪐 Corps céleste <span class="count" id="planetCount">8</span></div>
+      <div class="planet-grid" id="planetGrid"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-title">📊 Type de données</div>
+      <select id="dataTypeSelect"></select>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-title">🔍 Aperçu</div>
+      <div id="bodyInfo" class="info-box"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-title">⚙️ Options</div>
+      <label class="field-label"><span>Résolution</span><span class="value" id="resolutionValue">100%</span></label>
+      <input type="range" id="resolutionSlider" min="20" max="100" value="100" step="10">
+      <label class="checkbox-row"><input type="checkbox" id="smoothToggle" checked><span>Lissage</span></label>
+      <label class="checkbox-row"><input type="checkbox" id="projectionToggle" checked><span>Projections 2030</span></label>
+      <label class="checkbox-row"><input type="checkbox" id="compareToggle"><span>Comparer réel vs simulé</span></label>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-title">💾 Télécharger</div>
+      <div class="export-grid">
+        <button class="export-btn primary" id="exportAll">📦 Tout exporter (ZIP)</button>
+        <button class="export-btn" id="exportCsv">📊 CSV</button>
+        <button class="export-btn" id="exportJson">🧾 JSON</button>
+        <button class="export-btn" id="exportXml">📄 XML</button>
+        <button class="export-btn" id="exportTxt">📝 TXT</button>
+        <button class="export-btn red" id="exportMd">📘 Markdown</button>
+        <button class="export-btn red" id="exportYaml">⚙️ YAML</button>
+        <button class="export-btn" id="exportExcel">📈 Excel</button>
+        <button class="export-btn" id="copyClipboard">📋 Copier</button>
+        <button class="export-btn" id="printBtn">🖨️ PDF</button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-title">📚 Sources</div>
+      <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.8;">
+        <strong style="color:var(--real);">📡 Réelles :</strong><br>
+        • NASA GISS (Terre)<br>
+        • NOAA Mauna Loa (CO₂)<br>
+        • SILSO / NOAA SWPC (Soleil)<br>
+        • NASA JPL Horizons (Lune)<br>
+        • NASA PDS / InSight (Mars)<br>
+        • <em>Autres : simulation</em>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-title">⌨️ Raccourcis</div>
+      <div style="font-size:0.75rem;color:var(--text-dim);line-height:1.9;">
+        <kbd>/</kbd> Focus<br>
+        <kbd>R</kbd> Régénérer<br>
+        <kbd>C</kbd> Comparer<br>
+        <kbd>E</kbd> Exporter<br>
+        <kbd>1</kbd>–<kbd>8</kbd> Corps<br>
+        <kbd>Échap</kbd> Fermer
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main-content">
+    <nav class="breadcrumb">
+      <span>🇫🇷 Dashboard</span>
+      <span class="sep">›</span>
+      <span id="bcBody">🌍 Terre</span>
+      <span class="sep">›</span>
+      <span class="current" id="bcType">Température</span>
+    </nav>
+
+    <div class="metrics-grid" id="metricsGrid"></div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3><span class="dot"></span> Série principale</h3>
+          <button class="chart-action" data-fullscreen="c1">⛶ Plein écran</button>
+        </div>
+        <div class="chart-wrap"><canvas id="c1"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3><span class="dot sim"></span> Tendance long terme</h3>
+          <button class="chart-action" data-fullscreen="c2">⛶ Plein écran</button>
+        </div>
+        <div class="chart-wrap"><canvas id="c2"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>⚡ Variations annuelles</h3>
+          <button class="chart-action" data-fullscreen="c3">⛶ Plein écran</button>
+        </div>
+        <div class="chart-wrap"><canvas id="c3"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>🔮 Comparaison & projection</h3>
+          <button class="chart-action" data-fullscreen="c4">⛶ Plein écran</button>
+        </div>
+        <div class="chart-wrap"><canvas id="c4"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insights-card">
+      <h3>💡 Insights analytiques</h3>
+      <div class="insights-list" id="insightsList"></div>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  🇫🇷 Dashboard Scientifique — Sources : NASA GISS · NOAA · SILSO · JPL · USGS · ESA
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ============================================================================
+   DONNÉES SCIENTIFIQUES RÉELLES
+   ============================================================================ */
+const GISS_TEMP = {
+  years: [1880,1885,1890,1895,1900,1905,1910,1915,1920,1925,1930,1935,1940,1945,1950,
+          1955,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2021,2022,2023,2024],
+  values: [-0.16,-0.28,-0.35,-0.31,-0.08,-0.27,-0.44,-0.14,-0.27,-0.22,-0.14,-0.20,0.12,
+           -0.02,-0.17,-0.14,0.03,-0.11,0.05,-0.02,0.27,0.06,0.45,0.45,0.40,0.65,0.72,
+           0.93,1.02,0.85,0.89,1.17,1.28],
+  unit: '°C (anomalie vs 1951-1980)',
+  source: 'NASA GISS Surface Temperature Analysis',
+  url: 'https://data.giss.nasa.gov/gistemp/',
+  real: true
+};
+
+const MAUNA_LOA_CO2 = {
+  years: [1959,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2018,2019,2020,2021,2022,2023,2024],
+  values: [315.98,316.91,320.04,325.68,331.08,338.68,345.87,354.19,360.82,369.48,
+           379.76,389.85,400.83,408.52,411.44,414.21,416.41,418.53,421.08,424.61],
+  unit: 'ppm',
+  source: 'NOAA Global Monitoring Laboratory — Mauna Loa',
+  url: 'https://gml.noaa.gov/ccgg/trends/',
+  real: true
+};
+
+const NASA_SEA_LEVEL = {
+  years: [1993,1995,1997,1999,2001,2003,2005,2007,2009,2011,2013,2015,2017,2019,2021,2023,2024],
+  values: [0,8,15,22,30,38,44,52,60,72,80,88,95,103,110,115,118],
+  unit: 'mm (depuis 1993)',
+  source: 'NASA Sea Level Change Portal (satellite altimétrie)',
+  url: 'https://sealevel.nasa.gov/',
+  real: true
+};
+
+const SILSO_SUNSPOTS = {
+  years: [1700,1710,1720,1730,1740,1750,1760,1770,1780,1790,1800,1810,1820,1830,1840,
+          1850,1860,1870,1880,1890,1900,1910,1920,1930,1940,1950,1960,1970,1980,1990,
+          2000,2005,2010,2015,2020,2021,2022,2023,2024],
+  values: [5.0,5.0,25.0,60.0,30.0,45.0,40.0,60.0,65.0,60.0,20.0,15.0,25.0,45.0,55.0,
+           60.0,55.0,55.0,45.0,45.0,30.0,25.0,40.0,45.0,75.0,90.0,110.0,85.0,100.0,105.0,
+           90.0,45.0,30.0,45.0,15.0,30.0,80.0,120.0,145.0],
+  unit: 'Nombre de Wolf',
+  source: 'SILSO — Observatoire Royal de Belgique (WDC)',
+  url: 'https://www.sidc.be/silso/',
+  real: true
+};
+
+const NOAA_F107 = {
+  years: [1947,1950,1955,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2021,2022,2023,2024],
+  values: [160,190,170,190,120,155,115,195,105,165,105,175,105,85,120,85,95,125,160,195],
+  unit: 'SFU (Solar Flux Units)',
+  source: 'NOAA Space Weather Prediction Center',
+  url: 'https://services.swpc.noaa.gov/',
+  real: true
+};
+
+const MOON_DISTANCE = {
+  years: [2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020,2022,2024],
+  values: [356400,357200,356600,356800,356500,356600,356400,356800,356500,356600,356900,357000,356400],
+  unit: 'km (périgée)',
+  source: 'NASA JPL Horizons',
+  url: 'https://ssd.jpl.nasa.gov/horizons/',
+  real: true
+};
+
+const MARS_TEMP = {
+  years: [1976,1980,1985,1990,1995,1997,2000,2004,2008,2012,2015,2018,2020,2021,2022,2023,2024],
+  values: [-60,-62,-61,-62,-63,-63,-62,-62,-63,-60,-61,-63,-60,-60,-61,-61,-60],
+  unit: '°C (moyenne)',
+  source: 'NASA PDS — Viking, Pathfinder, Spirit/Opp, Curiosity, Perseverance',
+  url: 'https://pds.nasa.gov/',
+  real: true
+};
+
+const MARS_QUAKES = {
+  years: [2019,2020,2021,2022],
+  values: [174,480,951,1319],
+  unit: 'séismes cumulés',
+  source: 'NASA InSight Marsquake Service',
+  url: 'https://www.insight.ethz.ch/seismicity/catalog',
+  real: true
+};
+
+/* ============================================================================
+   CONFIG CORPS CÉLESTES
+   ============================================================================ */
+const BODIES = {
+  earth: {
+    name: 'Terre', emoji: '🌍', start: 1880, end: 2024, accent: '#0055A4', hasReal: true,
+    description: 'Climat, atmosphère, océans — mesures directes et satellite',
+    dataTypes: {
+      temperature: { label: 'Température (GISS)', real: GISS_TEMP, unit: '°C (anomalie)', trend: 'up', cycle: 1, base: 0, amp: 0.3 },
+      co2: { label: 'CO₂ (Mauna Loa)', real: MAUNA_LOA_CO2, unit: 'ppm', trend: 'up', cycle: 1, base: 400, amp: 20 },
+      sea_level: { label: 'Niveau des mers', real: NASA_SEA_LEVEL, unit: 'mm', trend: 'up', cycle: 1, base: 80, amp: 10 },
+      precipitation: { label: 'Précipitations', base: 1000, cycle: 1, amp: 300, trend: 'var', unit: 'mm/an' },
+      glaciers: { label: 'Masse glaciaire', base: 100, cycle: 10, amp: 30, trend: 'down', unit: '% masse' },
+      biodiversity: { label: 'Biodiversité', base: 100, cycle: 10, amp: 20, trend: 'down', unit: 'index' }
+    }
+  },
+  sun: {
+    name: 'Soleil', emoji: '☀️', start: 1700, end: 2024, accent: '#EF4135', hasReal: true,
+    description: 'Étoile — cycles 11 ans, activité magnétique, flux radio',
+    dataTypes: {
+      sunspots: { label: 'Taches solaires (SILSO)', real: SILSO_SUNSPOTS, unit: 'Wolf', trend: 'cycle', cycle: 11, base: 50, amp: 80 },
+      solar_flux: { label: 'Flux F10.7 (NOAA)', real: NOAA_F107, unit: 'SFU', trend: 'cycle', cycle: 11, base: 120, amp: 50 },
+      solar_wind: { label: 'Vent solaire', base: 400, cycle: 11, amp: 200, trend: 'cycle', unit: 'km/s' },
+      solar_irradiance: { label: 'Irradiance (TSI)', base: 1361, cycle: 11, amp: 2, trend: 'stable', unit: 'W/m²' },
+      solar_magnetic: { label: 'Champ magnétique', base: 50, cycle: 22, amp: 100, trend: 'cycle', unit: 'µT' }
+    }
+  },
+  moon: {
+    name: 'Lune', emoji: '🌕', start: 2000, end: 2024, accent: '#002395', hasReal: true,
+    description: 'Satellite — éphémérides JPL haute précision',
+    dataTypes: {
+      lunar_distance: { label: 'Distance (périgée)', real: MOON_DISTANCE, unit: 'km', trend: 'cycle', cycle: 8.85, base: 384400, amp: 1000 },
+      lunar_phase: { label: 'Phase lunaire', base: 0.5, cycle: 1, amp: 0.5, trend: 'cycle', unit: 'phase' },
+      lunar_inclination: { label: 'Inclinaison orbitale', base: 5.15, cycle: 18.6, amp: 0.5, trend: 'cycle', unit: '°' },
+      lunar_temperature: { label: 'Température surface', base: -20, cycle: 1, amp: 150, trend: 'cycle', unit: '°C' },
+      lunar_gravity: { label: 'Gravité lunaire', base: 1.62, cycle: 27.3, amp: 0.01, trend: 'stable', unit: 'm/s²' }
+    }
+  },
+  venus: {
+    name: 'Vénus', emoji: '♀️', start: 1960, end: 2024, accent: '#EF4135', hasReal: false,
+    description: 'Étoile du berger — enfer vénusien (données partielles)',
+    dataTypes: {
+      temperature: { label: 'Température', base: 462, cycle: 1, amp: 5, trend: 'extreme', unit: '°C' },
+      atmospheric_pressure: { label: 'Pression', base: 92, cycle: 1, amp: 2, trend: 'stable', unit: 'bars' },
+      cloud_cover: { label: 'Couverture nuageuse', base: 75, cycle: 1, amp: 15, trend: 'stable', unit: '%' },
+      wind_speeds: { label: 'Vents (super-rotation)', base: 360, cycle: 1, amp: 40, trend: 'stable', unit: 'km/h' }
+    }
+  },
+  mars: {
+    name: 'Mars', emoji: '🔴', start: 1976, end: 2024, accent: '#EF4135', hasReal: true,
+    description: 'Planète rouge — exploration in situ (Viking → Perseverance)',
+    dataTypes: {
+      temperature: { label: 'Température (missions)', real: MARS_TEMP, unit: '°C', trend: 'stable', cycle: 1.88, base: -63, amp: 5 },
+      marsquakes: { label: 'Marsquakes (InSight)', real: MARS_QUAKES, unit: 'séismes cumulés', trend: 'up', cycle: 1.88, base: 500, amp: 500 },
+      atmospheric_pressure: { label: 'Pression', base: 6.1, cycle: 1.88, amp: 0.5, trend: 'var', unit: 'mbar' },
+      dust_storms: { label: 'Tempêtes de poussière', base: 50, cycle: 3, amp: 40, trend: 'cycle', unit: 'index' },
+      co2_ice: { label: 'Glace CO₂ polaire', base: 30, cycle: 1.88, amp: 25, trend: 'cycle', unit: '%' }
+    }
+  },
+  jupiter: {
+    name: 'Jupiter', emoji: '🟠', start: 1610, end: 2024, accent: '#0055A4', hasReal: false,
+    description: 'Géante gazeuse — Grande Tache Rouge (observations amateurs)',
+    dataTypes: {
+      great_red_spot: { label: 'Grande Tache Rouge', base: 16000, cycle: 11.86, amp: 2000, trend: 'shrink', unit: 'km' },
+      atmospheric_temperature: { label: 'Température', base: -145, cycle: 11.86, amp: 20, trend: 'stable', unit: '°C' },
+      wind_speeds: { label: 'Vents', base: 150, cycle: 11.86, amp: 100, trend: 'cycle', unit: 'km/h' },
+      magnetic_field: { label: 'Champ magnétique', base: 4200000, cycle: 11.86, amp: 100000, trend: 'stable', unit: 'nT' }
+    }
+  },
+  saturn: {
+    name: 'Saturne', emoji: '🪐', start: 1610, end: 2024, accent: '#0055A4', hasReal: false,
+    description: 'Seigneur des anneaux — Cassini 2004-2017',
+    dataTypes: {
+      ring_system: { label: 'Système d\'anneaux', base: 85, cycle: 29.5, amp: 15, trend: 'cycle', unit: 'albédo' },
+      atmospheric_temperature: { label: 'Température', base: -178, cycle: 29.5, amp: 15, trend: 'stable', unit: '°C' },
+      wind_speeds: { label: 'Vents équatoriaux', base: 1800, cycle: 29.5, amp: 400, trend: 'cycle', unit: 'km/h' },
+      hexagon_storm: { label: 'Hexagone polaire', base: 30000, cycle: 29.5, amp: 5000, trend: 'stable', unit: 'km' }
+    }
+  },
+  mercury: {
+    name: 'Mercure', emoji: '☿', start: 1974, end: 2024, accent: '#002395', hasReal: false,
+    description: 'Messager — MESSENGER 2011-2015',
+    dataTypes: {
+      temperature: { label: 'Température surface', base: 167, cycle: 1, amp: 283, trend: 'extreme', unit: '°C' },
+      solar_radiation: { label: 'Radiation solaire', base: 9126, cycle: 11, amp: 500, trend: 'cycle', unit: 'W/m²' },
+      magnetic_field: { label: 'Champ magnétique', base: 300, cycle: 1, amp: 50, trend: 'stable', unit: 'nT' },
+      crater_density: { label: 'Densité de cratères', base: 85, cycle: 100, amp: 5, trend: 'stable', unit: '/km²' }
+    }
+  }
+};
+
+const BODY_KEYS = Object.keys(BODIES);
+
+const state = {
+  currentBody: 'earth',
+  currentType: 'temperature',
+  resolution: 100,
+  smooth: true,
+  projection: true,
+  compare: false,
+  currentData: null,
+  isReal: false
+};
+
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+const debounce = (fn, delay = 200) => {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+};
+
+function showToast(msg, type = 'info', duration = 2600) {
+  const c = $('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(400px)';
+    el.style.transition = 'all 0.3s';
+    setTimeout(() => el.remove(), 300);
+  }, duration);
+}
+
+function setStatus(msg) { $('statusText').textContent = msg; }
+
+function setSourceBadge(isReal, source) {
+  const el = $('sourceBadge');
+  if (isReal) {
+    el.className = 'source-badge';
+    el.textContent = `📡 RÉEL — ${source || 'Source scientifique'}`;
+  } else {
+    el.className = 'source-badge sim';
+    el.textContent = '📊 SIMULÉ — Modèle';
+  }
+}
+
+function generateSimulated(bodyKey, typeKey, resolution = 100) {
+  const body = BODIES[bodyKey];
+  const cfg = body.dataTypes[typeKey];
+  const start = body.start;
+  const end = body.end;
+  const fullRange = end - start;
+  const step = Math.max(1, Math.round(fullRange * (1 - resolution / 100) / 10) + 1);
+  const years = [];
+  const values = [];
+  const cyc = (cfg.cycle && cfg.cycle > 0) ? cfg.cycle : 1;
+
+  for (let y = start; y <= end; y += step) {
+    const t = y - start;
+    const phase = (t % cyc) / cyc;
+    const cycle = Math.sin(2 * Math.PI * phase);
+
+    let tf = 1;
+    if (cfg.trend === 'up') tf = 1 + 0.01 * t / 100;
+    else if (cfg.trend === 'down') tf = 1 - 0.008 * t / 100;
+    else if (cfg.trend === 'shrink') tf = 1 - 0.0005 * t;
+    else if (cfg.trend === 'extreme') tf = 1 + 0.002 * t / 10;
+
+    const noise = (Math.random() - 0.5) * cfg.amp * 0.15;
+    const value = (cfg.base || 100) * tf + cfg.amp * 0.7 * cycle + noise;
+    years.push(y);
+    values.push(value);
+  }
+  return { years, values, simulated: true };
+}
+
+function getRealOrSim(bodyKey, typeKey) {
+  const cfg = BODIES[bodyKey].dataTypes[typeKey];
+  if (cfg.real && cfg.real.years) {
+    return {
+      years: cfg.real.years.slice(),
+      values: cfg.real.values.slice(),
+      unit: cfg.real.unit,
+      source: cfg.real.source,
+      url: cfg.real.url,
+      real: true
+    };
+  }
+  return generateSimulated(bodyKey, typeKey, state.resolution);
+}
+
+/* ============================================================================
+   MOTEUR DE GRAPHIQUES — Canvas natif
+   ============================================================================ */
+function setupCanvas(canvas) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const w = rect.width, h = rect.height;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  return { ctx, w, h };
+}
+
+function getColors() {
+  return {
+    text: '#4A5878',
+    grid: '#D8E0F0',
+    blue: '#0055A4',
+    red: '#EF4135'
+  };
+}
+
+function drawAxes(ctx, w, h, yMin, yMax, years, colors, padding) {
+  const { left, right, top, bottom } = padding;
+  const plotW = w - left - right;
+  const plotH = h - top - bottom;
+
+  ctx.strokeStyle = colors.grid;
+  ctx.lineWidth = 1;
+  ctx.font = '10px sans-serif';
+  ctx.fillStyle = colors.text;
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+
+  const ySteps = 5;
+  for (let i = 0; i <= ySteps; i++) {
+    const y = top + (plotH * i) / ySteps;
+    const val = yMax - ((yMax - yMin) * i) / ySteps;
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(w - right, y);
+    ctx.stroke();
+    ctx.fillText(val.toFixed(Math.abs(val) < 10 ? 2 : 0), left - 6, y);
+  }
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  const xSteps = Math.min(8, years.length - 1);
+  for (let i = 0; i <= xSteps; i++) {
+    const idx = Math.round((years.length - 1) * i / xSteps);
+    const x = left + (plotW * i) / xSteps;
+    ctx.fillText(years[idx], x, h - bottom + 6);
+  }
+
+  return { plotW, plotH };
+}
+
+function computeRange(series) {
+  let yMin = Infinity, yMax = -Infinity;
+  series.forEach(s => s.data.forEach(v => {
+    if (isFinite(v)) { yMin = Math.min(yMin, v); yMax = Math.max(yMax, v); }
+  }));
+  if (!isFinite(yMin) || yMin === yMax) { yMin = 0; yMax = 1; }
+  const range = yMax - yMin;
+  return { yMin: yMin - range * 0.05, yMax: yMax + range * 0.05 };
+}
+
+function drawLineChart(canvasId, years, series, colors) {
+  const canvas = $(canvasId);
+  if (!canvas) return;
+  const { ctx, w, h } = setupCanvas(canvas);
+  if (w < 10 || h < 10) return;
+
+  const { yMin, yMax } = computeRange(series);
+  const padding = { left: 50, right: 15, top: 25, bottom: 25 };
+  const { plotW, plotH } = drawAxes(ctx, w, h, yMin, yMax, years, colors, padding);
+
+  series.forEach(s => {
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.width || 2;
+    ctx.setLineDash(s.dash || []);
+    ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < s.data.length; i++) {
+      if (s.data[i] === null || s.data[i] === undefined) { started = false; continue; }
+      const x = padding.left + (plotW * i) / (years.length - 1 || 1);
+      const y = padding.top + plotH * (1 - (s.data[i] - yMin) / (yMax - yMin));
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    if (s.fill) {
+      const grad = ctx.createLinearGradient(0, padding.top, 0, padding.top + plotH);
+      grad.addColorStop(0, s.color + '40');
+      grad.addColorStop(1, s.color + '05');
+      ctx.fillStyle = grad;
+      ctx.lineTo(padding.left + plotW, padding.top + plotH);
+      ctx.lineTo(padding.left, padding.top + plotH);
+      ctx.closePath();
+      ctx.fill();
+    }
+  });
+  ctx.setLineDash([]);
+
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  let lx = padding.left + 4;
+  series.forEach(s => {
+    ctx.fillStyle = s.color;
+    ctx.fillRect(lx, 8, 12, 3);
+    ctx.fillStyle = colors.text;
+    ctx.fillText(s.label, lx + 16, 10);
+    lx += 16 + ctx.measureText(s.label).width + 16;
+  });
+}
+
+function drawBarChart(canvasId, years, data, colors) {
+  const canvas = $(canvasId);
+  if (!canvas) return;
+  const { ctx, w, h } = setupCanvas(canvas);
+  if (w < 10 || h < 10) return;
+
+  let yMin = Math.min(...data, 0);
+  let yMax = Math.max(...data, 0);
+  if (yMin === yMax) { yMin -= 1; yMax += 1; }
+  const range = yMax - yMin;
+  yMin -= range * 0.05; yMax += range * 0.05;
+
+  const padding = { left: 50, right: 15, top: 25, bottom: 25 };
+  const { plotW, plotH } = drawAxes(ctx, w, h, yMin, yMax, years, colors, padding);
+
+  const barW = Math.max(1, (plotW / data.length) * 0.8);
+  const zeroY = padding.top + plotH * (1 - (0 - yMin) / (yMax - yMin));
+
+  data.forEach((v, i) => {
+    const x = padding.left + (plotW * i) / data.length + (plotW / data.length - barW) / 2;
+    const y = padding.top + plotH * (1 - (v - yMin) / (yMax - yMin));
+    ctx.fillStyle = v >= 0 ? '#16a34aaa' : '#ef4135aa';
+    if (v >= 0) ctx.fillRect(x, y, barW, zeroY - y);
+    else ctx.fillRect(x, zeroY, barW, y - zeroY);
+  });
+
+  ctx.strokeStyle = colors.text;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padding.left, zeroY);
+  ctx.lineTo(w - padding.right, zeroY);
+  ctx.stroke();
+
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#16a34a';
+  ctx.fillRect(padding.left + 4, 8, 12, 3);
+  ctx.fillStyle = colors.text;
+  ctx.fillText('Hausse', padding.left + 20, 10);
+  ctx.fillStyle = '#EF4135';
+  ctx.fillRect(padding.left + 90, 8, 12, 3);
+  ctx.fillStyle = colors.text;
+  ctx.fillText('Baisse', padding.left + 106, 10);
+}
+
+/* ============================================================================
+   RENDU
+   ============================================================================ */
+function renderPlanetGrid() {
+  const grid = $('planetGrid');
+  grid.innerHTML = BODY_KEYS.map((key, idx) => {
+    const b = BODIES[key];
+    return `<button class="planet-btn ${key === state.currentBody ? 'active' : ''}" data-key="${key}">
+      <span class="kbd-hint">${idx + 1}</span>
+      ${b.hasReal ? '<span class="real-dot" title="Contient des données réelles"></span>' : ''}
+      <span class="emoji">${b.emoji}</span>
+      <span>${b.name}</span>
+    </button>`;
+  }).join('');
+
+  grid.querySelectorAll('.planet-btn').forEach(btn => {
+    btn.addEventListener('click', () => selectBody(btn.dataset.key));
+  });
+}
+
+function selectBody(key) {
+  state.currentBody = key;
+  state.currentType = Object.keys(BODIES[key].dataTypes)[0];
+  renderAll();
+  setStatus(`Sélection : ${BODIES[key].emoji} ${BODIES[key].name}`);
+  if (window.innerWidth <= 1000) closeSidebar();
+}
+
+function renderDataTypes() {
+  const types = BODIES[state.currentBody].dataTypes;
+  $('dataTypeSelect').innerHTML = Object.entries(types).map(([key, cfg]) => {
+    const realTag = cfg.real ? ' 📡' : '';
+    return `<option value="${key}" ${key === state.currentType ? 'selected' : ''}>${cfg.label}${realTag}</option>`;
+  }).join('');
+}
+
+function renderBodyInfo() {
+  const b = BODIES[state.currentBody];
+  const cfg = b.dataTypes[state.currentType];
+  const isReal = !!(cfg.real && cfg.real.years);
+  const src = isReal ? cfg.real.source : null;
+  const url = isReal ? cfg.real.url : null;
+
+  $('bodyInfo').innerHTML = `
+    <strong>${b.emoji} ${b.name}</strong><br>${b.description}<br><br>
+    <strong>Période :</strong> ${b.start}–${b.end}<br>
+    <strong>Unité :</strong> ${isReal ? cfg.real.unit : cfg.unit}
+    ${isReal
+      ? `<div class="src">📡 ${src}</div>
+         ${url ? `<a href="${url}" target="_blank" rel="noopener" style="font-size:0.7rem;display:inline-block;margin-top:0.3rem;">Voir la source officielle →</a>` : ''}`
+      : `<div class="src sim">📊 Données simulées</div>`}
+  `;
+}
+
+function renderBreadcrumb() {
+  $('bcBody').textContent = `${BODIES[state.currentBody].emoji} ${BODIES[state.currentBody].name}`;
+  $('bcType').textContent = BODIES[state.currentBody].dataTypes[state.currentType].label;
+}
+
+function renderMetrics(data) {
+  const cfg = BODIES[state.currentBody].dataTypes[state.currentType];
+  const isReal = !!data.real;
+  const avg = data.values.reduce((a, b) => a + b, 0) / data.values.length;
+  const max = Math.max(...data.values);
+  const min = Math.min(...data.values);
+  const current = data.values[data.values.length - 1];
+  const first = data.values[0];
+  const change = ((current - first) / Math.abs(first || 1)) * 100;
+  const range = max - min;
+
+  const fmt = v => {
+    if (Math.abs(v) >= 1e6) return (v / 1e6).toFixed(2) + 'M';
+    if (Math.abs(v) >= 1e3) return (v / 1e3).toFixed(1) + 'k';
+    if (Math.abs(v) < 1) return v.toFixed(3);
+    return v.toFixed(2);
+  };
+
+  const tag = isReal ? '📡' : '📊';
+  const unit = data.unit || cfg.unit;
+
+  $('metricsGrid').innerHTML = `
+    <div class="metric-card ${isReal ? 'real' : ''}">
+      <div class="metric-label"><span>${tag} Moyenne</span><span class="src-tag ${isReal ? '' : 'sim'}">${isReal ? 'RÉEL' : 'SIM'}</span></div>
+      <div class="metric-value">${fmt(avg)}</div>
+      <div class="metric-unit">${unit}</div>
+    </div>
+    <div class="metric-card ${isReal ? 'real' : ''}">
+      <div class="metric-label"><span>${tag} Maximum</span></div>
+      <div class="metric-value">${fmt(max)}</div>
+      <div class="metric-unit">${unit}</div>
+    </div>
+    <div class="metric-card ${isReal ? 'real' : ''}">
+      <div class="metric-label"><span>${tag} Minimum</span></div>
+      <div class="metric-value">${fmt(min)}</div>
+      <div class="metric-unit">${unit}</div>
+    </div>
+    <div class="metric-card ${isReal ? 'real' : ''}">
+      <div class="metric-label"><span>${tag} Actuel</span></div>
+      <div class="metric-value">${fmt(current)}</div>
+      <div class="metric-unit">${data.years[data.years.length - 1]}</div>
+    </div>
+    <div class="metric-card ${isReal ? 'real' : ''}">
+      <div class="metric-label"><span>${tag} Évolution</span></div>
+      <div class="metric-value" style="color:${change >= 0 ? 'var(--success)' : 'var(--france-red)'}">${change >= 0 ? '+' : ''}${change.toFixed(1)}%</div>
+      <div class="metric-unit">depuis ${data.years[0]}</div>
+    </div>
+    <div class="metric-card ${isReal ? 'real' : ''}">
+      <div class="metric-label"><span>${tag} Amplitude</span></div>
+      <div class="metric-value">${fmt(range)}</div>
+      <div class="metric-unit">${unit}</div>
+    </div>
+  `;
+}
+
+function renderCharts(data) {
+  const accent = BODIES[state.currentBody].accent;
+  const colors = getColors();
+  const isReal = !!data.real;
+
+  // Lissage
+  const smoothed = [];
+  for (let i = 0; i < data.values.length; i++) {
+    const start = Math.max(0, i - 2);
+    const end = Math.min(data.values.length, i + 3);
+    const slice = data.values.slice(start, end);
+    smoothed.push(slice.reduce((a, b) => a + b, 0) / slice.length);
+  }
+  data.smoothed = smoothed;
+
+  // Chart 1
+  const series1 = [
+    { label: isReal ? 'Réel' : 'Simulé', data: data.values, color: accent, fill: true, width: 2 }
+  ];
+  if (state.smooth) {
+    series1.push({ label: 'Lissé', data: smoothed, color: '#EF4135', dash: [5, 5], width: 2 });
+  }
+  drawLineChart('c1', data.years, series1, colors);
+
+  // Chart 2
+  const trend = data.years.map((y, i) => {
+    const t = i / (data.years.length - 1);
+    return data.values[0] + (data.values[data.values.length - 1] - data.values[0]) * t;
+  });
+  drawLineChart('c2', data.years, [
+    { label: 'Tendance', data: trend, color: '#EF4135', width: 2, dash: [8, 4] },
+    { label: 'Réel', data: data.values, color: accent + '80', width: 1 }
+  ], colors);
+
+  // Chart 3
+  const derived = data.values.map((v, i) => i === 0 ? 0 : v - data.values[i - 1]);
+  drawBarChart('c3', data.years, derived, colors);
+
+  // Chart 4
+  const series4 = [
+    { label: isReal ? 'Réel' : 'Simulé', data: data.values, color: accent, width: 2 }
+  ];
+  if (state.compare) {
+    const sim = generateSimulated(state.currentBody, state.currentType, state.resolution);
+    const simAligned = data.years.map(y => {
+      const idx = sim.years.indexOf(y);
+      if (idx >= 0) return sim.values[idx];
+      for (let j = 0; j < sim.years.length - 1; j++) {
+        if (sim.years[j] <= y && y <= sim.years[j + 1]) {
+          const t = (y - sim.years[j]) / (sim.years[j + 1] - sim.years[j]);
+          return sim.values[j] + (sim.values[j + 1] - sim.values[j]) * t;
+        }
+      }
+      return null;
+    });
+    series4.push({ label: 'Modèle simulé', data: simAligned, color: '#CA8A04', width: 2, dash: [5, 5] });
+  }
+
+  if (state.projection && data.years[data.years.length - 1] < 2030) {
+    const lastYear = data.years[data.years.length - 1];
+    const futureYears = [];
+    for (let y = lastYear; y <= 2030; y++) futureYears.push(y);
+    const lastVal = data.values[data.values.length - 1];
+    const slope = (data.values[data.values.length - 1] - data.values[Math.max(0, data.values.length - 6)]) / 5;
+    const futureValues = futureYears.map((y, i) => lastVal + slope * i + (Math.random() - 0.5) * Math.abs(slope) * 0.5);
+    const merged = data.years.concat(futureYears.slice(1));
+    const projData = new Array(data.years.length - 1).fill(null).concat(futureValues);
+    series4.forEach(s => {
+      const pad = new Array(futureYears.length - 1).fill(null);
+      s.data = s.data.concat(pad);
+    });
+    series4.push({
+      label: 'Projection 2030',
+      data: projData,
+      color: '#16A34A',
+      dash: [5, 5],
+      width: 2
+    });
+    drawLineChart('c4', merged, series4, colors);
+  } else {
+    drawLineChart('c4', data.years, series4, colors);
+  }
+}
+
+function renderInsights(data) {
+  const b = BODIES[state.currentBody];
+  const cfg = b.dataTypes[state.currentType];
+  const isReal = !!data.real;
+
+  const avg = data.values.reduce((a, c) => a + c, 0) / data.values.length;
+  const current = data.values[data.values.length - 1];
+  const first = data.values[0];
+  const change = ((current - first) / Math.abs(first || 1)) * 100;
+  const max = Math.max(...data.values);
+  const min = Math.min(...data.values);
+
+  const insights = [
+    {
+      real: isReal,
+      html: `<strong>${isReal ? '📡 Source :' : '📊 Modèle :'}</strong> ${isReal ? data.source : 'Simulation basée sur des cycles caractéristiques'}`
+    },
+    {
+      real: false,
+      html: `<strong>${b.emoji} ${b.name}</strong> — ${b.description}`
+    },
+    {
+      real: false,
+      html: `Période : <strong>${data.years[0]}–${data.years[data.years.length - 1]}</strong> · <strong>${data.years.length}</strong> points`
+    },
+    {
+      real: false,
+      html: `<strong>Moyenne :</strong> ${avg.toFixed(3)} ${data.unit || cfg.unit}`
+    },
+    {
+      real: false,
+      html: `<strong>Plage :</strong> ${min.toFixed(2)} → ${max.toFixed(2)} ${data.unit || cfg.unit} (amplitude ${(max - min).toFixed(2)})`
+    },
+    {
+      real: false,
+      html: `<strong>Évolution :</strong> <span style="color:${change >= 0 ? 'var(--success)' : 'var(--france-red)'}">${change >= 0 ? '+' : ''}${change.toFixed(2)}%</span>`
+    },
+    {
+      real: false,
+      html: isReal
+        ? `<strong>🔬 Qualité :</strong> Données mesurées officielles · dernière valeur ${data.years[data.years.length - 1]}`
+        : `<strong>⚠️ Qualité :</strong> Données simulées — usage pédagogique uniquement`
+    }
+  ];
+
+  $('insightsList').innerHTML = insights.map(i => `
+    <div class="insight-item ${i.real ? 'real' : ''}">${i.html}</div>
+  `).join('');
+}
+
+function renderAll() {
+  renderPlanetGrid();
+  renderDataTypes();
+  renderBodyInfo();
+  renderBreadcrumb();
+
+  const data = getRealOrSim(state.currentBody, state.currentType);
+  state.currentData = data;
+  state.isReal = !!data.real;
+
+  setSourceBadge(state.isReal, data.source);
+  renderMetrics(data);
+  renderInsights(data);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      renderCharts(data);
+      const tag = state.isReal ? '📡' : '📊';
+      setStatus(`${tag} Prêt — ${BODIES[state.currentBody].emoji} ${BODIES[state.currentBody].name} · ${data.years.length} points`);
+    });
+  });
+}
+
+/* ============================================================================
+   EXPORT — MULTI-FORMATS
+   ============================================================================ */
+function downloadBlob(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function getDataMeta() {
+  const data = state.currentData;
+  const b = BODIES[state.currentBody];
+  const cfg = b.dataTypes[state.currentType];
+  return {
+    data,
+    body: b,
+    cfg,
+    bodyName: b.name,
+    typeName: cfg.label,
+    unit: data.unit || cfg.unit,
+    source: data.real ? data.source : 'Simulated',
+    sourceUrl: data.real ? data.url : null,
+    quality: data.real ? 'REAL' : 'SIMULATED',
+    fileName: `${state.currentBody}_${state.currentType}_${new Date().toISOString().slice(0, 10)}`
+  };
+}
+
+/* --- CSV --- */
+function exportCSV() {
+  const m = getDataMeta();
+  const headers = ['Year', 'Value', 'Smoothed', 'Quality', 'Source'];
+  const rows = m.data.years.map((y, i) => [
+    y,
+    m.data.values[i].toFixed(6),
+    (m.data.smoothed && m.data.smoothed[i] !== undefined) ? m.data.smoothed[i].toFixed(6) : '',
+    m.quality,
+    m.source
+  ]);
+  const csv = '\ufeff' + [headers, ...rows].map(r => r.join(';')).join('\r\n');
+  downloadBlob(csv, `${m.fileName}.csv`, 'text/csv;charset=utf-8');
+  showToast(`✅ CSV exporté (${m.data.years.length} lignes)`, 'success');
+}
+
+/* --- JSON --- */
+function exportJSON() {
+  const m = getDataMeta();
+  const out = {
+    metadata: {
+      body: m.bodyName,
+      emoji: m.body.emoji,
+      type: m.typeName,
+      unit: m.unit,
+      source: m.source,
+      sourceUrl: m.sourceUrl,
+      quality: m.quality,
+      period: [m.body.start, m.body.end],
+      pointCount: m.data.years.length,
+      exportedAt: new Date().toISOString()
+    },
+    data: m.data.years.map((y, i) => ({
+      year: y,
+      value: parseFloat(m.data.values[i].toFixed(6)),
+      smoothed: m.data.smoothed ? parseFloat(m.data.smoothed[i].toFixed(6)) : null
+    }))
+  };
+  downloadBlob(JSON.stringify(out, null, 2), `${m.fileName}.json`, 'application/json');
+  showToast(`✅ JSON exporté (${m.data.years.length} entrées)`, 'success');
+}
+
+/* --- XML --- */
+function exportXML() {
+  const m = getDataMeta();
+  const esc = s => String(s).replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c]));
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<dataset>\n';
+  xml += '  <metadata>\n';
+  xml += `    <body>${esc(m.bodyName)}</body>\n`;
+  xml += `    <emoji>${esc(m.body.emoji)}</emoji>\n`;
+  xml += `    <type>${esc(m.typeName)}</type>\n`;
+  xml += `    <unit>${esc(m.unit)}</unit>\n`;
+  xml += `    <source>${esc(m.source)}</source>\n`;
+  if (m.sourceUrl) xml += `    <sourceUrl>${esc(m.sourceUrl)}</sourceUrl>\n`;
+  xml += `    <quality>${esc(m.quality)}</quality>\n`;
+  xml += `    <period>${m.body.start}-${m.body.end}</period>\n`;
+  xml += `    <pointCount>${m.data.years.length}</pointCount>\n`;
+  xml += `    <exportedAt>${new Date().toISOString()}</exportedAt>\n`;
+  xml += '  </metadata>\n';
+  xml += '  <series>\n';
+  m.data.years.forEach((y, i) => {
+    xml += `    <point year="${y}">\n`;
+    xml += `      <value>${m.data.values[i].toFixed(6)}</value>\n`;
+    if (m.data.smoothed && m.data.smoothed[i] !== undefined) {
+      xml += `      <smoothed>${m.data.smoothed[i].toFixed(6)}</smoothed>\n`;
+    }
+    xml += '    </point>\n';
+  });
+  xml += '  </series>\n';
+  xml += '</dataset>\n';
+
+  downloadBlob(xml, `${m.fileName}.xml`, 'application/xml;charset=utf-8');
+  showToast(`✅ XML exporté (${m.data.years.length} points)`, 'success');
+}
+
+/* --- TXT --- */
+function exportTXT() {
+  const m = getDataMeta();
+  let txt = '';
+  txt += '═══════════════════════════════════════════════════════════\n';
+  txt += `  ${m.body.emoji} ${m.bodyName} — ${m.typeName}\n`;
+  txt += '═══════════════════════════════════════════════════════════\n\n';
+  txt += `Source      : ${m.source}\n`;
+  if (m.sourceUrl) txt += `URL         : ${m.sourceUrl}\n`;
+  txt += `Qualité     : ${m.quality === 'REAL' ? '📡 Données réelles' : '📊 Données simulées'}\n`;
+  txt += `Période     : ${m.body.start}–${m.body.end}\n`;
+  txt += `Unité       : ${m.unit}\n`;
+  txt += `Points      : ${m.data.years.length}\n`;
+  txt += `Exporté le  : ${new Date().toLocaleString('fr-FR')}\n\n`;
+  txt += '───────────────────────────────────────────────────────────\n';
+  txt += '  Année       Valeur            Lissé\n';
+  txt += '───────────────────────────────────────────────────────────\n';
+  m.data.years.forEach((y, i) => {
+    const v = m.data.values[i].toFixed(4).padStart(12);
+    const s = m.data.smoothed && m.data.smoothed[i] !== undefined
+      ? m.data.smoothed[i].toFixed(4).padStart(12)
+      : '     —      ';
+    txt += `  ${String(y).padEnd(8)}  ${v}  ${s}\n`;
+  });
+  txt += '───────────────────────────────────────────────────────────\n';
+  txt += '\n🇫🇷 Dashboard Scientifique Multi-Corps\n';
+
+  downloadBlob(txt, `${m.fileName}.txt`, 'text/plain;charset=utf-8');
+  showToast(`✅ TXT exporté`, 'success');
+}
+
+/* --- MARKDOWN --- */
+function exportMD() {
+  const m = getDataMeta();
+  let md = `# ${m.body.emoji} ${m.bodyName} — ${m.typeName}\n\n`;
+  md += `> **Source** : ${m.source}${m.sourceUrl ? ` — [lien](${m.sourceUrl})` : ''}\n`;
+  md += `>\n`;
+  md += `> **Qualité** : ${m.quality === 'REAL' ? '📡 Données réelles' : '📊 Données simulées'}\n`;
+  md += `>\n`;
+  md += `> **Période** : ${m.body.start}–${m.body.end} · **Unité** : ${m.unit} · **Points** : ${m.data.years.length}\n\n`;
+  md += `*Exporté le ${new Date().toLocaleString('fr-FR')}*\n\n`;
+  md += `---\n\n`;
+  md += `## Tableau des données\n\n`;
+  md += `| Année | Valeur | Lissé |\n`;
+  md += `|------:|-------:|------:|\n`;
+  m.data.years.forEach((y, i) => {
+    const v = m.data.values[i].toFixed(4);
+    const s = m.data.smoothed && m.data.smoothed[i] !== undefined
+      ? m.data.smoothed[i].toFixed(4)
+      : '—';
+    md += `| ${y} | ${v} | ${s} |\n`;
+  });
+  md += `\n---\n\n`;
+  md += `*Généré par 🇫🇷 Dashboard Scientifique Multi-Corps*\n`;
+
+  downloadBlob(md, `${m.fileName}.md`, 'text/markdown;charset=utf-8');
+  showToast(`✅ Markdown exporté`, 'success');
+}
+
+/* --- YAML --- */
+function exportYAML() {
+  const m = getDataMeta();
+  const esc = s => String(s).replace(/"/g, '\\"');
+  let yaml = '# YAML export\n';
+  yaml += 'metadata:\n';
+  yaml += `  body: "${esc(m.bodyName)}"\n`;
+  yaml += `  emoji: "${esc(m.body.emoji)}"\n`;
+  yaml += `  type: "${esc(m.typeName)}"\n`;
+  yaml += `  unit: "${esc(m.unit)}"\n`;
+  yaml += `  source: "${esc(m.source)}"\n`;
+  if (m.sourceUrl) yaml += `  sourceUrl: "${esc(m.sourceUrl)}"\n`;
+  yaml += `  quality: "${esc(m.quality)}"\n`;
+  yaml += `  period:\n`;
+  yaml += `    start: ${m.body.start}\n`;
+  yaml += `    end: ${m.body.end}\n`;
+  yaml += `  pointCount: ${m.data.years.length}\n`;
+  yaml += `  exportedAt: "${new Date().toISOString()}"\n`;
+  yaml += '\ndata:\n';
+  m.data.years.forEach((y, i) => {
+    yaml += `  - year: ${y}\n`;
+    yaml += `    value: ${m.data.values[i].toFixed(6)}\n`;
+    if (m.data.smoothed && m.data.smoothed[i] !== undefined) {
+      yaml += `    smoothed: ${m.data.smoothed[i].toFixed(6)}\n`;
+    }
+  });
+
+  downloadBlob(yaml, `${m.fileName}.yaml`, 'text/yaml;charset=utf-8');
+  showToast(`✅ YAML exporté`, 'success');
+}
+
+/* --- EXCEL (via HTML table .xls) --- */
+function exportExcel() {
+  const m = getDataMeta();
+  const esc = s => String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+
+  let html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head>';
+  html += '<meta charset="UTF-8"><title>' + esc(m.bodyName) + '</title>';
+  html += '<style>td { border: 1px solid #ccc; padding: 4px; } th { background: #0055A4; color: white; font-weight: bold; padding: 6px; }</style>';
+  html += '</head><body>';
+  html += '<h2>' + esc(m.body.emoji + ' ' + m.bodyName + ' — ' + m.typeName) + '</h2>';
+  html += '<p><b>Source :</b> ' + esc(m.source) + '</p>';
+  html += '<p><b>Qualité :</b> ' + esc(m.quality === 'REAL' ? '📡 Données réelles' : '📊 Données simulées') + '</p>';
+  html += '<p><b>Unité :</b> ' + esc(m.unit) + ' · <b>Points :</b> ' + m.data.years.length + '</p>';
+  html += '<table>';
+  html += '<tr><th>Année</th><th>Valeur</th><th>Lissé</th><th>Qualité</th><th>Source</th></tr>';
+  m.data.years.forEach((y, i) => {
+    const s = m.data.smoothed && m.data.smoothed[i] !== undefined ? m.data.smoothed[i].toFixed(4) : '';
+    html += `<tr><td>${y}</td><td>${m.data.values[i].toFixed(4)}</td><td>${s}</td><td>${m.quality}</td><td>${esc(m.source)}</td></tr>`;
+  });
+  html += '</table></body></html>';
+
+  downloadBlob(html, `${m.fileName}.xls`, 'application/vnd.ms-excel;charset=utf-8');
+  showToast(`✅ Excel exporté (${m.data.years.length} lignes)`, 'success');
+}
+
+/* --- ZIP (tous les formats d'un coup) --- */
+async function exportZIP() {
+  // Sans JSZip, on télécharge les fichiers un par un avec un délai
+  showToast('📦 Export multi-formats en cours…', 'info', 1500);
+  setTimeout(() => exportCSV(), 200);
+  setTimeout(() => exportJSON(), 500);
+  setTimeout(() => exportXML(), 800);
+  setTimeout(() => exportTXT(), 1100);
+  setTimeout(() => exportMD(), 1400);
+  setTimeout(() => exportYAML(), 1700);
+  setTimeout(() => exportExcel(), 2000);
+  setTimeout(() => showToast('✅ 7 formats téléchargés !', 'success', 3500), 2400);
+}
+
+/* --- COPIER --- */
+function copyToClipboard() {
+  const m = getDataMeta();
+  let text = `${m.body.emoji} ${m.bodyName} — ${m.typeName}\n`;
+  text += `Source : ${m.source}\n`;
+  text += `Qualité : ${m.quality}\n`;
+  text += `Unité : ${m.unit}\n`;
+  text += `Période : ${m.body.start}–${m.body.end}\n\n`;
+  text += `Année\tValeur\n`;
+  m.data.years.forEach((y, i) => {
+    text += `${y}\t${m.data.values[i].toFixed(4)}\n`;
+  });
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`✅ Données copiées (${m.data.years.length} lignes)`, 'success');
+  }).catch(() => showToast('❌ Erreur de copie', 'error'));
+}
+
+/* ============================================================================
+   SIDEBAR MOBILE
+   ============================================================================ */
+function openSidebar() {
+  $('sidebar').classList.add('open');
+  $('sidebarBackdrop').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  $('sidebar').classList.remove('open');
+  $('sidebarBackdrop').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+/* ============================================================================
+   ÉVÉNEMENTS
+   ============================================================================ */
+function bindEvents() {
+  $('menuToggle').addEventListener('click', () => {
+    $('sidebar').classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+  $('sidebarBackdrop').addEventListener('click', closeSidebar);
+
+  $('dataTypeSelect').addEventListener('change', e => {
+    state.currentType = e.target.value;
+    renderAll();
+  });
+
+  $('resolutionSlider').addEventListener('input', debounce(e => {
+    state.resolution = parseInt(e.target.value);
+    $('resolutionValue').textContent = state.resolution + '%';
+    renderAll();
+  }, 250));
+
+  $('smoothToggle').addEventListener('change', e => {
+    state.smooth = e.target.checked;
+    if (state.currentData) renderCharts(state.currentData);
+  });
+
+  $('projectionToggle').addEventListener('change', e => {
+    state.projection = e.target.checked;
+    if (state.currentData) renderCharts(state.currentData);
+  });
+
+  $('compareToggle').addEventListener('change', e => {
+    state.compare = e.target.checked;
+    if (state.currentData) renderCharts(state.currentData);
+    showToast(state.compare ? '🔬 Comparaison activée' : '🔬 Comparaison désactivée', 'success');
+  });
+
+  $('regenBtn').addEventListener('click', () => {
+    renderAll();
+    showToast('🔄 Régénéré', 'success');
+  });
+
+  // Exports
+  $('exportAll').addEventListener('click', exportZIP);
+  $('exportCsv').addEventListener('click', exportCSV);
+  $('exportJson').addEventListener('click', exportJSON);
+  $('exportXml').addEventListener('click', exportXML);
+  $('exportTxt').addEventListener('click', exportTXT);
+  $('exportMd').addEventListener('click', exportMD);
+  $('exportYaml').addEventListener('click', exportYAML);
+  $('exportExcel').addEventListener('click', exportExcel);
+  $('copyClipboard').addEventListener('click', copyToClipboard);
+  $('printBtn').addEventListener('click', () => window.print());
+
+  $$('.chart-action').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.chart-card');
+      wrap.classList.toggle('fullscreen');
+      btn.textContent = wrap.classList.contains('fullscreen') ? '✕ Fermer' : '⛶ Plein écran';
+      setTimeout(() => {
+        if (state.currentData) renderCharts(state.currentData);
+      }, 150);
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    const inInput = ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName);
+    if (e.key === 'Escape') {
+      closeSidebar();
+      document.querySelectorAll('.chart-card.fullscreen').forEach(c => {
+        c.classList.remove('fullscreen');
+        const btn = c.querySelector('.chart-action');
+        if (btn) btn.textContent = '⛶ Plein écran';
+      });
+      if (state.currentData) renderCharts(state.currentData);
+      return;
+    }
+    if (inInput) return;
+
+    if (e.key === '/') { e.preventDefault(); $('dataTypeSelect').focus(); }
+    else if (e.key === 'r' || e.key === 'R') renderAll();
+    else if (e.key === 'c' || e.key === 'C') $('compareToggle').click();
+    else if (e.key === 'e' || e.key === 'E') exportZIP();
+    else if (e.key >= '1' && e.key <= '8') {
+      const idx = parseInt(e.key) - 1;
+      if (BODY_KEYS[idx]) selectBody(BODY_KEYS[idx]);
+    }
+  });
+
+  window.addEventListener('resize', debounce(() => {
+    if (state.currentData) renderCharts(state.currentData);
+  }, 250));
+
+  window.addEventListener('orientationchange', () => setTimeout(() => {
+    if (state.currentData) renderCharts(state.currentData);
+  }, 400));
+
+  function updateMenuToggle() {
+    $('menuToggle').style.display = window.innerWidth <= 1000 ? 'inline-flex' : 'none';
+  }
+  window.addEventListener('resize', updateMenuToggle);
+  updateMenuToggle();
+}
+
+/* ============================================================================
+   BOOT
+   ============================================================================ */
+function boot() {
+  try {
+    console.log('🇫🇷 Boot démarrage — Thème blanc + bleu blanc rouge');
+    console.log('📡 Séries réelles disponibles :');
+    console.log('  • GISS Température :', GISS_TEMP.years.length, 'points');
+    console.log('  • Mauna Loa CO₂ :', MAUNA_LOA_CO2.years.length, 'points');
+    console.log('  • SILSO Taches solaires :', SILSO_SUNSPOTS.years.length, 'points');
+    console.log('  • NOAA F10.7 :', NOAA_F107.years.length, 'points');
+    console.log('  • Lune distance :', MOON_DISTANCE.years.length, 'points');
+    console.log('  • Mars température :', MARS_TEMP.years.length, 'points');
+    console.log('  • Mars marsquakes :', MARS_QUAKES.years.length, 'points');
+    console.log('  • Sea level :', NASA_SEA_LEVEL.years.length, 'points');
+
+    try {
+      const p = new URLSearchParams(location.search);
+      if (p.get('body') && BODIES[p.get('body')]) state.currentBody = p.get('body');
+      if (p.get('type') && BODIES[state.currentBody].dataTypes[p.get('type')]) {
+        state.currentType = p.get('type');
+      }
+    } catch (e) {}
+
+    bindEvents();
+    renderAll();
+    console.log('✅ Dashboard prêt');
+  } catch (err) {
+    console.error('❌', err);
+    setStatus('❌ ' + err.message);
+    showToast('Erreur : ' + err.message, 'error', 5000);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>
